@@ -21,6 +21,7 @@ package org.sonar.java.model;
 
 import com.sonar.sslr.api.RecognitionException;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.eclipse.jdt.core.dom.AST;
@@ -249,6 +250,7 @@ public class JParser {
   ) {
     ASTParser astParser = ASTParser.newParser(AST.JLS12);
     Map<String, String> options = new HashMap<>();
+    options.put(JavaCore.COMPILER_COMPLIANCE, version);
     options.put(JavaCore.COMPILER_SOURCE, version);
     options.put(JavaCore.COMPILER_PB_ENABLE_PREVIEW_FEATURES, "enabled");
     astParser.setCompilerOptions(options);
@@ -272,6 +274,7 @@ public class JParser {
       if (!problem.isError()) {
         continue;
       }
+      System.err.println(problem.getSourceLineNumber() + ": " + problem.getMessage());
       if ((problem.getID() & IProblem.Syntax) == 0) {
         continue;
       }
