@@ -80,6 +80,11 @@ public class JavaAstScanner {
     return sonarComponents != null && sonarComponents.analysisCancelled();
   }
 
+  private boolean resolveBindings;
+  public void setResolveBindings(boolean resolveBindings) {
+    this.resolveBindings = resolveBindings;
+  }
+
   private void simpleScan(InputFile inputFile) {
     visitor.setCurrentFile(inputFile);
     try {
@@ -94,7 +99,8 @@ public class JavaAstScanner {
         version,
         inputFile.filename(),
         fileContent,
-        Collections.emptyList()
+        resolveBindings,
+        visitor.getClasspath()
       );
       visitor.visitFile(ast);
     } catch (RecognitionException e) {

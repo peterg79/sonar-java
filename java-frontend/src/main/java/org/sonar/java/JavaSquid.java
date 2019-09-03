@@ -85,10 +85,15 @@ public class JavaSquid {
 
     //AstScanner for main files
     astScanner = new JavaAstScanner(sonarComponents);
+    if (Boolean.getBoolean("sonar.java.internal.ecj.sema")) {
+      System.err.println("ECJ semantic enabled");
+      astScanner.setResolveBindings(true);
+    }
     astScanner.setVisitorBridge(createVisitorBridge(codeVisitors, classpath, javaVersion, sonarComponents, SymbolicExecutionMode.getMode(visitors, xFileEnabled)));
 
     //AstScanner for test files
     astScannerForTests = new JavaAstScanner(sonarComponents);
+    astScannerForTests.setResolveBindings(false);
     astScannerForTests.setVisitorBridge(createVisitorBridge(testCodeVisitors, testClasspath, javaVersion, sonarComponents, SymbolicExecutionMode.DISABLED));
 
   }

@@ -66,6 +66,7 @@ public class VisitorsBridge {
 
   private static final Logger LOG = Loggers.get(VisitorsBridge.class);
 
+  private final List<File> classpath;
   private final BehaviorCache behaviorCache;
   private final List<JavaFileScanner> allScanners;
   private List<JavaFileScanner> executableScanners;
@@ -96,6 +97,7 @@ public class VisitorsBridge {
         allScanners.add((JavaFileScanner) visitor);
       }
     }
+    this.classpath = projectClasspath;
     this.executableScanners = allScanners.stream().filter(isIssuableSubscriptionVisitor.negate()).collect(Collectors.toList());
     this.scannerRunner = new ScannerRunner(allScanners);
     this.sonarComponents = sonarComponents;
@@ -106,6 +108,10 @@ public class VisitorsBridge {
 
   public JavaVersion getJavaVersion() {
     return javaVersion;
+  }
+
+  public List<File> getClasspath() {
+    return classpath;
   }
 
   public void setJavaVersion(JavaVersion javaVersion) {
